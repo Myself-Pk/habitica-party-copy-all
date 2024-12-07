@@ -53,6 +53,26 @@
           <div>{{ $t('copyAsTodo') }}</div>
         </div>
         <div
+          class="action d-flex align-items-center"
+          @click="copyAsHabit(msg)"
+        >
+          <div
+            class="svg-icon"
+            v-html="icons.copy"
+          ></div>
+          <div>{{ $t('copyAsHabit') }}</div>
+        </div>
+        <div
+          class="action d-flex align-items-center"
+          @click="copyAsDaily(msg)"
+        >
+          <div
+            class="svg-icon"
+            v-html="icons.copy"
+          ></div>
+          <div>{{ $t('copyAsDaily') }}</div>
+        </div>
+        <div
           v-if="(user.flags.communityGuidelinesAccepted && msg.uuid !== 'system')
             && (!isMessageReported || hasPermission(user, 'moderator'))"
           class="action d-flex align-items-center"
@@ -317,6 +337,15 @@ export default {
       return null;
     },
     copyAsTodo (message) {
+      message.typeOf = 'todo';
+      this.$root.$emit('habitica::copy-as-todo', message);
+    },
+    copyAsHabit (message) {
+      message.typeOf = 'habit';
+      this.$root.$emit('habitica::copy-as-todo', message);
+    },
+    copyAsDaily (message) {
+      message.typeOf = 'daily';
       this.$root.$emit('habitica::copy-as-todo', message);
     },
     report () {

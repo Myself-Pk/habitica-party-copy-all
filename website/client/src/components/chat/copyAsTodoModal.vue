@@ -1,7 +1,7 @@
 <template>
   <b-modal
     id="copyAsTodo"
-    :title="$t('copyMessageAsToDo')"
+    :title="modalTitle"
     :hide-footer="true"
     size="md"
   >
@@ -65,6 +65,7 @@ export default {
     return {
       isUser: true,
       task: {},
+      modalTitle: this.$t('copyMessageAsToDo'),
     };
   },
   mounted () {
@@ -72,10 +73,17 @@ export default {
       const notes = `${message.user || 'system message'}${message.user ? ' wrote' : ''} in [${this.groupName}](${this.groupPath()})`;
       const newTask = {
         text: message.text,
-        type: 'todo',
+        type: message.typeOf,
         notes,
       };
       this.task = taskDefaults(newTask, this.$store.state.user.data);
+      if (message.typeOf === 'habit') {
+        this.modalTitle = this.$t('copyMessageAsHabit');
+      } else if (message.typeOf === 'daily') {
+        this.modalTitle = this.$t('copyMessageAsDaily');
+      } else {
+        this.modalTitle = this.$t('copyMessageAsToDo');
+      }
       this.$root.$emit('bv::show::modal', 'copyAsTodo');
     });
   },
